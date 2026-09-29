@@ -42,7 +42,7 @@
     .video-wrap{
       position:fixed;
       inset:0;
-      z-index:-3;
+      z-index:0;
       overflow:hidden;
       background:
         linear-gradient(180deg,rgba(15,46,46,.72),rgba(15,46,46,.58)),
@@ -60,7 +60,7 @@
     .overlay{
       position:fixed;
       inset:0;
-      z-index:-2;
+      z-index:1;
       background:
         linear-gradient(180deg,
           rgba(12,45,45,.57) 0%,
@@ -79,6 +79,8 @@
     }
 
     .page{
+      position:relative;
+      z-index:2;
       width:min(100%,760px);
       min-height:100dvh;
       margin:0 auto;
@@ -376,9 +378,8 @@
       .card{min-height:70px}
     }
 
-   @media (prefers-reduced-motion:reduce){
-  *{scroll-behavior:auto!important}
-}
+    @media (prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important}
     }
   </style>
 </head>
@@ -386,7 +387,7 @@
 <body>
   <div class="video-wrap" aria-hidden="true">
     <video autoplay muted loop playsinline preload="metadata">
-      <source src="occidental-punta-cana-bg.mp4" type="video/mp4" />
+      <source src="./occidental-punta-cana-bg.mp4" type="video/mp4" />
     </video>
   </div>
   <div class="overlay" aria-hidden="true"></div>
@@ -502,5 +503,20 @@
       Living Your Way
     </footer>
   </main>
+
+  <script>
+    // Safe autoplay retry for mobile browsers.
+    window.addEventListener("DOMContentLoaded", () => {
+      const video = document.querySelector(".video-wrap video");
+      if (!video) return;
+      video.muted = true;
+      video.playsInline = true;
+      const tryPlay = () => video.play().catch(() => {});
+      tryPlay();
+      document.addEventListener("touchstart", tryPlay, { once:true, passive:true });
+      document.addEventListener("click", tryPlay, { once:true });
+    });
+  </script>
+
 </body>
 </html>
